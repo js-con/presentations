@@ -65,7 +65,6 @@ titleRow: true
 
 <Ep2 />
 
-
 ---
 layout: big-points
 title: 为什么要有组合式API?
@@ -82,6 +81,10 @@ titleRow: true
 
 <div m="b-4" w="200" text="xl">
 
+ref的优点
+
+<v-click>
+
 * 显示调用.value可触发TS类型检查
 ```html
 <script setup lang="ts">
@@ -94,7 +97,9 @@ target = foo //ts:error!
 target = bar //nothing
 </script>
 ```
+</v-click>
 </div>
+
 
 ---
 layout: big-points
@@ -104,10 +109,28 @@ titleRow: true
 
 <div m="b-4" w="200" text="xl">
 
+<v-click>
+
 ### reactive可以自动解包，但是有一些缺点：
+
+
 - reactive在类型上和一般的对象没有区别
+</v-click>
+
+<v-click>
+
 - 使用ES6解构时会失去响应性(toRef)
+
+</v-click>
+
+<v-click>
+
 - 需要使用箭头函数包装才可以进行watch
+
+</v-click>
+
+<v-click>
+
 ```javascript
 const foo = { prop: 0 }
 const bar = reactive({
@@ -119,6 +142,7 @@ bar.prop = 2
 const { prop } = bar //lose reactivity
 watch(()=>bar.prop, ()=>{})
 ```
+</v-click>
 </div>
 
 ---
@@ -130,9 +154,22 @@ titleRow: true
 <div m="b-4" w="200" text="xl">
 
 ### ref在很多情况下也可以自动解包
+
+<v-click>
+
 - 模板中
+</v-click>
+<v-click>
+
 - watch监听时
+</v-click>
+<v-click>
+
 - 使用reactive包裹嵌套的ref
+</v-click>
+
+<v-click>
+
 ```html
 <template>
   <div>{{ foo }}</div>
@@ -144,6 +181,8 @@ data.foo = bar //ok
 watch(foo,()=>{}) //ok
 </script>
 ```
+
+</v-click>
 </div>
 
 ---
@@ -154,6 +193,8 @@ titleRow: true
 
 <div m="b-4" w="200" text="xl">
 
+<v-click>
+
 - 实现:
 ```javascript
 import { isRef } from 'vue'
@@ -163,6 +204,9 @@ function unref<T>( r: Ref<T> | T): T {
 ```
 <br />
 <br />
+</v-click>
+
+<v-click>
 
 - 使用
 ```javascript
@@ -172,7 +216,9 @@ unref(foo) //foo
 const bar = 'bar'
 unref(bar) //bar
 ```
+</v-click>
 </div>
+
 
 ---
 layout: big-points
@@ -208,6 +254,7 @@ titleRow: true
 ### 使用MaybeRef类型工具
 
 <div m="b-4" w="200" text="xl">
+<v-click>
 
 - 使用前
 ```javascript
@@ -217,6 +264,8 @@ export function useTimeAgo(
 	return computed( ()=> someFormating( unref(time) ) )
 }
 ```
+</v-click>
+<v-click>
 
 - 使用后
 ```javascript
@@ -225,6 +274,7 @@ export function useTimeAgo( MaybeRef<Date | number | string> ){
 	return computed( ()=> someFormating( unref(time) ) )
 }
 ```
+</v-click>
 </div>
 
 ---
@@ -243,6 +293,8 @@ titleRow: true
 
 <div m="b-4" w="200" text="xl">
 
+<v-click>
+
 - 常见多余代码
 ```javascript
 const foo = ref(1)
@@ -251,13 +303,18 @@ const bar = foo
 ```
 <br />
 <br />
+</v-click>
+
+<v-click>
 
 - ref变量不会被构造函数重复构造
 ```javascript
 const foo = ref(1)
 const bar = ref(foo)
 ```
+</v-click>
 </div>
+
 
 ---
 layout: big-points
@@ -295,6 +352,7 @@ titleRow: true
 ---
 
 <div m="b-4" w="200" text="xl">
+<v-click>
 
 - 通常考虑
 ```javascript
@@ -304,6 +362,8 @@ title.value = 'Hello World'
 
 <br />
 <br />
+</v-click>
+<v-click>
 
 - 更加灵活
 ```javascript
@@ -312,6 +372,7 @@ const title = computed( ()=> `${name.value} World` )
 useTitle(title) //此时title和页面的title建立了连结
 name.value = 'Hi' //页面标题变成 Hi World
 ```
+</v-click>
 </div>
 
 ---
@@ -321,6 +382,7 @@ titleRow: true
 ---
 
 <div m="b-4" w="200" text="xl">
+<v-click>
 
 - store.ts
 ```javascript
@@ -331,18 +393,26 @@ export const store = reactive({
 	}
 })
 ```
+</v-click>
+
+<v-click>
 
 - A.vue
 ```javascript
 import { store } from 'store'
 store.state.foo = 'yeah'
 ```
+</v-click>
+
+<v-click>
 
 - B.vue
 ```javascript
 import { store } from 'store'
 console.log(store.state.foo) // 'yeah'
 ```
+
+</v-click>
 </div>
 
 ---
