@@ -230,7 +230,7 @@ titleRow: true
 <style>
 li{
   padding: 0 !important;
-  font-size: 0.8rem !important;
+  font-size: 1rem !important ;
 }
 </style>
 
@@ -759,6 +759,153 @@ console.log(store.state.foo) // 'yeah'
 -->
 
 ---
+layout: big-points
+title: 副作用清除
+titleRow: true
+---
+
+<div w="200">
+<v-click>
+
+useEventListener
+```javascript
+import { onUnmounted } from 'vue'
+
+export function useEventListener(target: EventTarget, name:string, fn:any){
+  target.addEventListener(name, fn)
+
+  onUnmounted(()=>{
+    target.removeEventListener(name, fn)
+  })
+}
+```
+</v-click>
+</div>
+
+<!-- 
+在vue3中，其实它响应式底层的effect会在组件销毁时自动销毁。也就是说
+你不用担心你watch了一个响应式变量，然后组件销毁了它还在watch，产生这样
+一种副作用，也就是vue组件会自动做这件事情。
+所以我们在编写自己的hooks函数时，也可以实现类似的这样一种模式。
+（点击）比如我们这里一个useEventListener函数，作用是帮助注册监听事件，并且在
+组件unmounted的时候清除事件。
+同样的，在对上层API进行封装时，我们也可以遵循这样一种模式，降低用户的心智负担。
+ -->
+
+---
+layout: big-points
+title: 副作用清除
+titleRow: true
+---
+
+<div w="200" flex="~">
+
+<div m="r-4">
+
+```javascript
+function useDouble(counter: Ref<number>){
+  const doubled = computed(()=> counter.value * 2)
+
+  onUnmounted(()=>{
+    stop(doubled.effect)
+  })
+
+  return {
+    doubled
+  }
+}
+```
+</div>
+
+<div>
+
+```javascript
+function useDouble(counter: Ref<number>){
+  const disposables = []
+
+  const doubled = computed(()=> counter.value * 2)
+  disposables.push(()=>stop(doubled.effect))
+
+  const stopWatch = watchEffect(()=>{
+    console.log('counter changed:', counter.value)
+  })
+  disposables.push(stopWatch)
+
+  // ...
+  onUnmounted(()=>{
+    disposables.forEach(f => f());
+    disposables = []
+  })
+
+  // ...
+}
+
+```
+</div>
+</div>
+
+
+<!-- 
+那么有的同学可能注意到了，我们刚才说，在vue组件内部使用的effect，比如computed，watch等，
+会在组件销毁时由vue统一销毁。
+但是vue3中，这些响应式API可以独立于组件存在，比如我们编写了一个hooks函数，里面使用到了watch，
+那这个销毁工作由谁来做呢？由于hooks其实就是javascript函数，所以vue肯定是管不到了。我们需要手动
+来处理这件事情。
+（点击）这里应该知道的是，vue为每个effect提供了一个stop函数，它用于清除副作用。比如在这个函数里，
+我们在onUnmounted钩子中清除了内部创建的副作用。
+但是这样就出现了一个痛点，如果一个hooks内部的effect过多，清理的代码会变得繁杂。在vue3刚出现时，
+基本的清理思路就是这样
+（点击）每创建一个effect时，就把它的清除函数塞入一个清除队列，最后在要释放的时候，遍历这个队列依次执行。
+这样无疑是增加了代码的噪声，影响了整体可读性。
+其实，vue3.2版本为我们提供了一个新的API来解决这个问题，但很多人还没有使用过（下一页）
+ -->
+
+---
+layout: big-points
+title: EffectScope
+titleRow: true
+---
+
+<div w="200">
+<div v-click>
+
+```javascript
+function effectScope(detached?: boolean): EffectScope
+
+interface EffectScope {
+  run<T>(fn: () => T): T | undefined
+  stop(): void
+}
+```
+</div>
+
+<div v-click>
+
+```javascript
+const scope = effectScope()
+scope.run(()=>{
+  const doubled = computed(()=> counter.value * 2)
+
+  watch(doubled, ()=> console.log(doubled.value))
+
+  watchEffect(()=> console.log('Count:',doubled.value))
+
+})
+
+scope.stop()
+```
+</div>
+</div>
+
+<!-- 
+这个API叫effectScope,它的签名大概是这样的（点击）
+他的使用方式类似于一个构造函数，它提供一个run方法，用来运行一个effect，
+相应的，它提供了一个stop方法，当调用stop时，其effect内部所有副作用都会被统一清除
+这是一个使用例子（点击）
+由于现在建立的新项目都是3.2版本了，大家不要忘记使用这个API
+ -->
+
+---
 layout: section
 ---
 
@@ -958,71 +1105,274 @@ layout: section
 # JSX in vue3
 
 <!-- 
-最后，我们来介绍一下vue3中的jsx的使用。大家可能都知道了，vue3对jsx也提供了更好的支持。（下一页）
+最后，我们来介绍一下vue3中的jsx的使用。有些同学可能知道，vue3其实对jsx也提供了更好的支持。（下一页）
+那在咱们自己的项目中包括很多开源项目中，其实大家都更偏向于使用模板，
+如果一个人更喜欢jsx，他干脆就会直接选择react。其实，vue中的jsx也非常灵活，同时在很多场景下
+是要比模板表达性更强的。
  -->
 
 ---
 layout: big-points
-title: jsx in vue3
+title: JSX 前世今生
 titleRow: true
 ---
 
-<div m="b-4" w="200" text="xl">
+<div w="200" flex="~">
 
-- 插件：vuejs/babel-plugin-jsx
+<div>
+<ul>
+<li>
+
+### 最早由facebook起草，但不是tc39规范
+</li>
+<li>
+
+### 浏览器不会实现
+</li>
+<li>
+
+### 由编译器和框架自己实现
+</li>
+</ul>
+</div>
+
+<div>
+
 ```javascript
-export const Msg = defineComponent({
-  setup(){
-    const msg = ref('hello, world')
-    return ()=>{
-      <div>{ msg.value }</div>
-    }
-  }
-})
+<h1>Hello, world!</h1>
+```
 
-export default{
-  setup(){
-    return ()=>{
-      <div>
-        <Msg />
-      </div>
+```javascript
+import { createVNode as _createVNode } from 'vue'
+
+_createVNode('h1', null, "hello, world")
+```
+</div>
+</div>
+
+<!-- 
+有些同学可能对JSX有些误解，他可能认为JSX是react的专利，其实并不是这样的
+虽说是规范，但它和tc39是不一样的，因为它本质上是语法糖，它由各个框架或者工具链去进行
+编译。
+ -->
+
+---
+layout: big-points
+title: vue3的JSX
+titleRow: true
+---
+
+<div w="200" v-click>
+
+### 插件：@vue/babel-plugin-jsx
+
+```javascript
+declare global {
+  namespace JSX {
+    interface Element {}
+    interface ElementClass {
+      $props: {}
     }
+    interface ElementAttributeProperty{
+      $props: {}
+    }
+    // ...
   }
 }
 ```
 </div>
 
+<!-- 
+如果有同学在vue2里写过jsx应该清楚，在vue2项目写jsx时需要装一些babel的包
+它们用来编译和运行jsx。另外如果你想在vue2里写tsx你还额外需要装一个vue-tsx-support这个包
+因为vue2源码本身不是用TS写的。
+但是在vue3中，我们只用装一个@vue/babel-plugin-jsx就可以了
+（点击）同时它还内置了jsx元素的类型，相当于开箱即用
+ -->
+
+
 ---
 layout: big-points
-title: 类型安全的组件参数
+title: 什么时候使用JSX
 titleRow: true
 ---
 
-<div m="b-4" w="200" text="xl">
+<div w="200" flex="~">
 
-- props:
-```html
-<script setup lang="ts">
-const props = defineProps<{
-  foo: string
-  bar?: number
-}>()
+<div m="r-4" v-click>
 
-props.foo // string
-props.bar // number | undefined
-</script>
-```
+```javascript
 
-- emits
-```html
-<script setup lang="ts">
-const emit = defineEmits<{
-  (e: 'change', id: number): void
-  (e: 'update', value: string): void
-}>()
-</script>
+const List = defineComponent({
+  setup(){
+    return ()=>(<div>...</div>)
+  }
+})
+const Footer = defineComponent({
+  setup(){
+    return ()=>(<div>...</div>)
+  }
+})
+export default defineComponent({
+  setup(){
+    return ()=>(
+      <>
+        // ...
+        <List />
+        <Footer />
+      </>
+    )
+  }
+})
 ```
 </div>
+<div v-click>
+
+```javascript
+const renderContent = defineComponent({
+  setup(props){
+    const Content = [
+      <div class="foo">Foo</div>,
+      <div class="bar">Bar</div>
+    ]
+    if(props.shouldReverse)
+      Content.reverse()
+
+    return ()=>(
+      <div>{ Content }</div>
+    )
+  }
+})
+```
+</div>
+</div>
+
+<!-- 
+模板和JSX各有优劣，在某些场景下，使用JSX编写vue3组件其实更加优雅
+首先，第一个例子（点击）
+很多情况下，将一个SFC拆分成一些细粒度的组件其实更有利于阅读，但是大部分人不愿意拆的原因
+就是SFC是单文件组件，如果要拆就得拆到新文件中，而组件的粒度又挺细，就觉得拆了还不如不拆
+这种时候，其实可以考虑一个文件里写多个组件，既保证了可读性，又不至于让代码过于分散。
+比如说在这个文件中，我们的父组件包含了很多节点，现在我们想把它的List和Footer拆分出来，那么我们可以直接
+在上面进行组件的定义，可以看到，这样的一个代码组织会更加清晰。其实不使用jsx也可以采取这种模式，但是
+那种情况下我们需要写h函数，可能有些同学没有写过，刚才我们介绍了，在vue中，jsx会被编译成
+createVNode函数，而h函数就是createVNode这个函数的一个简写，它们本质是一个函数。那h函数大家都知道,
+写起来确实和jsx一样灵活，但是一旦节点多了，它的可读性就会非常差。
+同时，我们知道，vue SFC是一个.vue后缀文件，它需要经过vue-compiler进行编译，那么我们在开发过程中的类型安全，拿vscode来说，其实是vue官方开发的插件volar来做的，这个插件的效果并没有TS那么好，尤其是组件
+的层级关系比较复杂时，有些类型还是会丢失，而且它时长会占用比较大的内存。
+但是，使用TSX进行开发时，由于TSX文件本质就是ts，可以享受到TS编译器的照顾，无需安装其他插件，类型
+检查不再是个痛点。
+(点击)第二个优点呢，就是使用jsx可以享受到javascript的完全编程能力，什么叫完全编程能力呢，其实就是
+灵活性。我们可以自由的处置jsx元素，比如在这个例子中，我们直接把元素塞进一个数组，接着，如果组件参数中
+传了shouldReverse,那么我们直接用js的数组方式操作节点即可。在类似这种情况下，其实它的可读性是要比模板
+高一些的。
+ -->
+
+
+---
+layout: big-points
+title: JSX的Vue本地化
+titleRow: true
+---
+
+<div w="200">
+
+<div v-click>
+
+```jsx
+// v-show
+<input v-show={this.visible.value} />
+// v-if
+{ visible.value && <input /> }
+{ visible.value ? <input /> : <textarea />}
+
+//v-bind
+<input title={msg.value} />
+
+// v-model
+<input v-model={val} />
+<input v-model={[val, "modifier"]}
+<A v-models={[ [foo], [bar, "bar"] ]} />
+
+// slots
+const slots = {
+  bar: () => <span>B</span>
+}
+<A v-slots={slots} />
+
+// v-for
+{ arr.map(i=><div key={i.id}>{i.name}</div>)}
+
+```
+</div>
+
+</div>
+
+<!-- 
+下面，我们来讲一下Vue中的JSX和React中有什么不同。
+大家都知道，vue的模板指令是一种魔法，需要经过编译，那在jsx中还能不能使用vue的内置指令呢？
+其实是可以的（点击）
+我们可以看到，比如v-show，可以直接使用，不过大家要注意，在模板中vue会自动帮你进行ref的解包
+但是jsx就需要你自己手动去.value了。
+接着是v-bind，我们不再需要，直接传入一个值即可。
+然后是v-if也是没有的，因为借助JS本身的运算符就可以实现，比如这个短路运算符，或者是三元运算符
+接着是v-model，在vue3中可以指定model名称，这里是以数组形式，第一个是值，第二个是名称
+那么如果是多个v-model，就传入一个二维数组，注意这里是v-models，多了一个s
+再是slot，以对象的形式传入，注意这里的值需要是一个函数
+最后是v-for，和react里使用相同，直接用js的map去操作数组即可
+其实在我一开始知道vue3的jsx原来这么厉害的时候，我也是比较吃惊的，感觉就像react里是手动挡，
+vue3里是自动挡。确实，vue3的jsx提供了很多便利，但它同时也有一些坑需要注意,尤其是如果你是一个
+react选手，那么要更加小心。
+ -->
+
+---
+layout: big-points
+title: 小心使用JSX
+titleRow: true
+---
+
+<div w="200">
+
+<ul>
+<li v-click>
+
+### vue3不能直接传递VNode给属性
+</li>
+
+<li v-click>
+
+### vue3中不建议写纯函数组件
+```javascript
+function Button(props){
+  return <button {...props}>按钮</button>
+}
+const Button = defineComponent({
+  setup(props){
+    return ()=><button {...props}>按钮</button>
+  }
+})
+```
+</li>
+
+<li v-click>
+
+### 大多数情况下JSX的性能不如模板
+</li>
+</ul>
+</div>
+
+<!-- 
+（点击）第一个注意点就是vue组件的props不能直接传jsx节点，这和react不一样，
+在react中我们可以使用children或者render props来传递jsx节点。
+但是vue中要实现节点的传递只能用插槽。
+（点击）第二个坑是vue3中最好不要写纯函数式组件。习惯react的用户可能会这么干，
+但要知道，react组件render时，会同时render它的所有子组件，而vue则完全不同
+写纯函数组件，你传入的props改变后，节点并不一定会更新，所以在vue3中尽量避免使用纯函数
+式组件，使用defineComponent
+（点击）第三个问题是在多数情况下，JSX的性能是不如模板好的，因为vue针对模板进行了很多优化，
+使用JSX的话就享受不到。但这个差距仅在dom节点很多的时候才会比较明显，所以一般来说，
+我们倾向于优先考虑代码可读性。
+ -->
 
 ---
 layout: big-points
@@ -1030,10 +1380,25 @@ title: 类型安全的provide/inject
 titleRow: true
 ---
 
-<div m="b-4" text="xl">
-如果不主动包装类型，provide/inject将会变成any类型，非常不安全。
-在vue3中，我们使用injectionKey来包装类型：
+<div w="200" flex="~">
+<div v-click m="r-4">
+
+```javascript
+const Child = defineComponent({
+  setup(){
+    const orderId = inject('orderId')
+    return ()=><div>{orderId.value}</div>
+  }
+})
+const Parent = defineComponent({
+  setup(){
+    const orderId = provide('orderId', orderId)
+    return ()=><Child />
+  }
+})
+```
 </div>
+<div v-click>
 
 ```javascript
 interface UserInfo {
@@ -1047,16 +1412,42 @@ import { injectKeyUser } from './context'
 export default {
 	setup(){
 			provice( injectKeyUser, {
-				id: 1,
+				id: 1iiiiiii,
 				name: 'xxx'
 			})
       // 子组件中 const user = inject(injectKeyUser)
 	}
 }
 ```
+</div>
+</div>
+
+<!-- 
+最后，再来分享一个很多人没用到的技巧。
+刚才说到在项目中我们可以在一个文件中写多个组件，但是一旦组件比较多
+props传来传去就比较麻烦，这时候我们最好使用vue3的provide/inject API
+（点击）使用方法大家应该都知道，在父组件provide一个值，并指定一个字符串key，
+同时在子组件inject这个key，就能拿到对应的值。
+但是这里有个问题，这样写是不能保证类型安全的，这个key相当于是any，就是说
+你这个inject获取的值可能不存在，一旦key写错了也就拿不到值了。
+这里我们可以使用Vue提供的一个类型工具injectionKey来解决这个问题（点击）
+我们首先把要provide的数据类型定义好，然后作为泛型参数传给injectionKey，
+之后使用Symbol()来确保它全局唯一。
+这样我们在inject时就能获得正确的类型提示了，也就保证了类型安全。
+ -->
 
 ---
 layout: outro
 ---
+
+<!-- 
+那么我最后总结一下，今天分享的内容虽然很简单，
+但都是些很实用却容易被忽略的知识点，但如果每个人都能运用好
+这些社区的优秀实践，提高自己代码的可读性，就能提高团队整体的
+效率。虽然我们内部有些远古代码，一个组件上千行，已经难以进行重构，
+但是我们可以从自己的新功能开始，在力所能及的范围内，提高代码的质量，
+不仅是对项目负责，其实也间接提高了未来接手同学的体验和工作效率。
+好的，今天的分享就到这里，谢谢大家的观看。
+ -->
 
 # 谢谢观看！
