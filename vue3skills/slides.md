@@ -1,8 +1,8 @@
 ---
-theme: vuetiful
-clicks: 1
-altCover: true
+theme: seriph
 title: Vue3 实战技巧
+themeConfig:
+  primary: '#4d7534'
 fonts:
   mono: 'Comic Code Ligatures'
 ---
@@ -26,16 +26,24 @@ layout: section
  -->
 
 ---
-layout: big-points
-title: 为什么要有组合式API?
-titleRow: true
+layout: quote
 ---
+
+<style>
+h3{
+  position: absolute;
+  left:48px;
+  top:16px;
+}
+</style>
+
+### 为什么要有组合式API?
 
 <div m="b-4" w="200" text="xl" flex="~">
 
 <div w="100" v-click>
 
-```javascript
+```js {monaco}
 export default {
   data(){
     return{
@@ -70,10 +78,10 @@ export default {
  -->
 
 ---
-layout: big-points
-title: 为什么要有组合式API?
-titleRow: true
+layout: quote
 ---
+
+### 为什么要有组合式API?
 
 <div w="200" flex="~" text="xl">
 
@@ -134,10 +142,10 @@ const toggleDark = ()=>{
  -->
 
 ---
-layout: big-points
-title: 为什么要有组合式API?
-titleRow: true
+layout: quote
 ---
+
+### 为什么要有组合式API?
 
 <div m="b-4" w="250" text="xl" flex="~" align="items-center">
 <Ep2 v-click/>
@@ -186,10 +194,10 @@ export default {
  -->
 
 ---
-layout: big-points
-title: 总结
-titleRow: true
+layout: quote
 ---
+
+### 总结
 
 <Ep3 />
 
@@ -222,10 +230,10 @@ layout: section
  -->
 
 ---
-layout: big-points
-title: ref 还是 reactive?
-titleRow: true
+layout: quote
 ---
+
+### ref 还是 reactive?
 
 <style>
 li{
@@ -238,8 +246,7 @@ li{
 <div v-click="1" flex="1" m="r-4">
 ref
 
-```html
-<script setup lang="ts">
+```ts
 import { ref } from 'vue'
 
 let foo = 0
@@ -247,7 +254,6 @@ let bar = ref(0)
 
 foo = 1
 bar = 1 // ts-error
-</script>
 ```
 
 <div m="t-4" text="[1rem]">
@@ -321,10 +327,10 @@ watchEffect里面，我触发了一个数据的更新
  -->
 
 ---
-layout: big-points
-title: ref 还是 reactive?
-titleRow: true
+layout: quote
 ---
+
+### ref 还是 reactive?
 
 <div m="b-4" w="200" text="xl">
 
@@ -381,10 +387,10 @@ reactive返回出的属性是自动unwrap的。
  -->
 
 ---
-layout: big-points
-title: ref的反操作 - unref
-titleRow: true
+layout: quote
 ---
+
+### ref的反操作 - unref
 
 <div m="b-4" w="200" text="xl">
 
@@ -425,10 +431,10 @@ unref就是ref的反操作，也就是你传给他一个ref，他就给你ref的
 
 
 ---
-layout: big-points
-title: 接受ref作为参数
-titleRow: true
+layout: quote
 ---
+
+### 接受ref作为参数
 
 <div m="t-8" w="250" text="xl" flex="col">
 
@@ -514,10 +520,10 @@ a+5的状态。
  -->
 
 ---
-layout: big-points
-title: 使用MaybeRef类型工具
-titleRow: true
+layout: quote
 ---
+
+### 使用MaybeRef类型工具
 
 - 实现
 ```typescript
@@ -560,10 +566,10 @@ export function useTimeAgo( MaybeRef<Date | number | string> ){
 
 
 ---
-layout: big-points
-title: 编写hook时尽量使其用法更灵活
-titleRow: true
+layout: quote
 ---
+
+### 编写hook时尽量使其用法更灵活
 
 <div m="b-4" w="200" text="xl">
 <v-click>
@@ -600,10 +606,10 @@ name.value = 'Hi' //页面标题变成 Hi World
 -->
 
 ---
-layout: big-points
-title: useTitle实现
-titleRow: true
+layout: quote
 ---
+
+### useTitle实现
 
 <div w="200">
 
@@ -634,14 +640,14 @@ export function useTitle(
  -->
 
 ---
-layout: big-points
-title: 重复使用已有ref
-titleRow: true
+layout: quote
 ---
+
+### 重复使用已有ref
 
 <div m="b-4" w="200" text="xl">
 
-### ref变量不会被构造函数重复构造
+#### ref变量不会被构造函数重复构造
 <div m="y-8">
 
 ```javascript
@@ -674,10 +680,10 @@ function useFoo(foo: Ref<string> | string) {
 -->
 
 ---
-layout: big-points
-title: 使用由ref组成的对象
-titleRow: true
+layout: quote
 ---
+
+### 使用由ref组成的对象
 
 <div m="b-4" w="200" text="xl">
 
@@ -709,10 +715,10 @@ mouse.x === x.value // true
  -->
 
 ---
-layout: big-points
-title: 状态共享
-titleRow: true
+layout: quote
 ---
+
+### 状态共享
 
 <div m="b-4" w="200" text="xl">
 <v-click>
@@ -759,10 +765,10 @@ console.log(store.state.foo) // 'yeah'
 -->
 
 ---
-layout: big-points
-title: 副作用清除
-titleRow: true
+layout: quote
 ---
+
+### 副作用清除
 
 <div w="200">
 <v-click>
@@ -793,10 +799,10 @@ export function useEventListener(target: EventTarget, name:string, fn:any){
  -->
 
 ---
-layout: big-points
-title: 副作用清除
-titleRow: true
+layout: quote
 ---
+
+### 副作用清除
 
 <div w="200" flex="~">
 
@@ -861,10 +867,10 @@ function useDouble(counter: Ref<number>){
  -->
 
 ---
-layout: big-points
-title: EffectScope
-titleRow: true
+layout: quote
 ---
+
+### EffectScope
 
 <div w="200">
 <div v-click>
@@ -917,10 +923,10 @@ layout: section
  -->
 
 ---
-layout: big-points
-title: 取舍
-titleRow: true
+layout: quote
 ---
+
+### 取舍
 
 <v-click>
 
@@ -952,10 +958,10 @@ titleRow: true
 
 
 ---
-layout: big-points
-title: 逻辑关注点分离
-titleRow: true
+layout: quote
 ---
+
+### 逻辑关注点分离
 
 <v-click>
 
@@ -985,10 +991,10 @@ titleRow: true
 
 
 ---
-layout: big-points
-title: 逻辑关注点分离
-titleRow: true
+layout: quote
 ---
+
+### 逻辑关注点分离
 
 <div m="b-4" w="200" text="xl">
 
@@ -1016,10 +1022,10 @@ titleRow: true
 </div>
 
 ---
-layout: big-points
-title: 逻辑关注点分离
-titleRow: true
+layout: quote
 ---
+
+### 逻辑关注点分离
 
 <div m="b-4" w="200" text="xl">
 
@@ -1060,10 +1066,10 @@ export function useList(list: Ref<List>){
 
 
 ---
-layout: big-points
-title: 逻辑关注点分离
-titleRow: true
+layout: quote
 ---
+
+### 逻辑关注点分离
 
 <div m="b-4" w="200" text="xl">
 
@@ -1112,31 +1118,26 @@ layout: section
  -->
 
 ---
-layout: big-points
-title: JSX 前世今生
-titleRow: true
+layout: quote
 ---
+
+### JSX 前世今生
 
 <div w="200" flex="~">
 
 <div>
 <ul>
-<li>
+<li v-click>
 
-### 最早由facebook起草，但不是tc39规范
+#### 最早由facebook起草，但不是tc39规范
 </li>
-<li>
+<li v-click>
 
-### 浏览器不会实现
+#### 浏览器不会实现
 </li>
-<li>
+<li v-click>
 
-### 由编译器和框架自己实现
-</li>
-</ul>
-</div>
-
-<div>
+#### 由编译器和框架自己实现
 
 ```javascript
 <h1>Hello, world!</h1>
@@ -1147,6 +1148,8 @@ import { createVNode as _createVNode } from 'vue'
 
 _createVNode('h1', null, "hello, world")
 ```
+</li>
+</ul>
 </div>
 </div>
 
@@ -1157,14 +1160,14 @@ _createVNode('h1', null, "hello, world")
  -->
 
 ---
-layout: big-points
-title: vue3的JSX
-titleRow: true
+layout: quote
 ---
+
+### vue3的JSX
 
 <div w="200" v-click>
 
-### 插件：@vue/babel-plugin-jsx
+#### 插件：@vue/babel-plugin-jsx
 
 ```javascript
 declare global {
@@ -1192,10 +1195,10 @@ declare global {
 
 
 ---
-layout: big-points
-title: 什么时候使用JSX
-titleRow: true
+layout: quote
 ---
+
+### 什么时候使用JSX
 
 <div w="200" flex="~">
 
@@ -1270,10 +1273,10 @@ createVNode函数，而h函数就是createVNode这个函数的一个简写，它
 
 
 ---
-layout: big-points
-title: JSX的Vue本地化
-titleRow: true
+layout: quote
 ---
+
+### JSX的Vue本地化
 
 <div w="200">
 
@@ -1326,22 +1329,22 @@ react选手，那么要更加小心。
  -->
 
 ---
-layout: big-points
-title: 小心使用JSX
-titleRow: true
+layout: quote
 ---
+
+### 小心使用JSX
 
 <div w="200">
 
 <ul>
 <li v-click>
 
-### vue3不能直接传递VNode给属性
+#### vue3不能直接传递VNode给属性
 </li>
 
 <li v-click>
 
-### vue3中不建议写纯函数组件
+#### vue3中不建议写纯函数组件
 ```javascript
 function Button(props){
   return <button {...props}>按钮</button>
@@ -1356,7 +1359,7 @@ const Button = defineComponent({
 
 <li v-click>
 
-### 大多数情况下JSX的性能不如模板
+#### 大多数情况下JSX的性能不如模板
 </li>
 </ul>
 </div>
@@ -1375,10 +1378,10 @@ const Button = defineComponent({
  -->
 
 ---
-layout: big-points
-title: 类型安全的provide/inject
-titleRow: true
+layout: quote
 ---
+
+### 类型安全的provide/inject
 
 <div w="200" flex="~">
 <div v-click m="r-4">
@@ -1437,7 +1440,7 @@ props传来传去就比较麻烦，这时候我们最好使用vue3的provide/inj
  -->
 
 ---
-layout: outro
+layout: end
 ---
 
 <!-- 
@@ -1450,4 +1453,3 @@ layout: outro
 好的，今天的分享就到这里，谢谢大家的观看。
  -->
 
-# 谢谢观看！

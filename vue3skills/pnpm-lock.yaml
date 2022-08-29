@@ -1,26 +1,24 @@
 lockfileVersion: 5.4
 
-importers:
+specifiers:
+  '@iconify-json/logos': ^1.1.14
+  '@iconify-json/uim': ^1.1.2
+  '@slidev/cli': ^0.35.5
+  '@slidev/theme-default': '*'
+  '@slidev/theme-seriph': '*'
+  slidev-theme-vuetiful: ^0.3.1
+  vue: ^3.2.37
 
-  .:
-    specifiers: {}
+dependencies:
+  '@slidev/cli': 0.35.5_postcss@8.4.16
+  '@slidev/theme-default': 0.21.2
+  '@slidev/theme-seriph': 0.21.3
+  slidev-theme-vuetiful: 0.3.1_mf6qq4loghhhbxa6kbuadco3gy
+  vue: 3.2.37
 
-  packages/vue3skills:
-    specifiers:
-      '@iconify-json/logos': ^1.1.14
-      '@iconify-json/uim': ^1.1.2
-      '@slidev/cli': ^0.35.5
-      '@slidev/theme-default': '*'
-      '@slidev/theme-seriph': '*'
-      slidev-theme-vuetiful: ^0.3.1
-    dependencies:
-      '@slidev/cli': 0.35.5_postcss@8.4.16
-      '@slidev/theme-default': 0.21.2
-      '@slidev/theme-seriph': 0.21.3
-      slidev-theme-vuetiful: 0.3.1_mf6qq4loghhhbxa6kbuadco3gy
-    devDependencies:
-      '@iconify-json/logos': 1.1.14
-      '@iconify-json/uim': 1.1.2
+devDependencies:
+  '@iconify-json/logos': 1.1.14
+  '@iconify-json/uim': 1.1.2
 
 packages:
 
@@ -236,7 +234,7 @@ packages:
       is-installed-globally: 0.4.0
       jiti: 1.14.0
       js-base64: 3.7.2
-      katex: 0.16.0
+      katex: 0.16.1
       kolorist: 1.5.1
       markdown-it: 13.0.1
       markdown-it-footnote: 3.0.3
@@ -300,7 +298,7 @@ packages:
       file-saver: 2.0.5
       js-base64: 3.7.2
       js-yaml: 4.1.0
-      katex: 0.16.0
+      katex: 0.16.1
       mermaid: 9.1.6
       monaco-editor: 0.34.0
       nanoid: 4.0.0
@@ -400,7 +398,7 @@ packages:
       '@unocss/config': 0.45.13
       '@unocss/core': 0.45.13
       '@unocss/preset-uno': 0.45.13
-      cac: 6.7.12
+      cac: 6.7.14
       chokidar: 3.5.3
       colorette: 2.0.19
       consola: 2.15.3
@@ -826,8 +824,8 @@ packages:
       fill-range: 7.0.1
     dev: false
 
-  /cac/6.7.12:
-    resolution: {integrity: sha512-rM7E2ygtMkJqD9c7WnFU6fruFcN3xe4FM5yUmgxhZzIKJk4uHl9U/fhwdajGFQbQuv43FAUo1Fe8gX/oIKDeSA==}
+  /cac/6.7.14:
+    resolution: {integrity: sha512-b6Ilus+c3RrdDk+JhLKUAQfzzgLEPy6wcXqS7f/xe1EETvsDP6GORG7SFuOs6cID5YkqchW/LXZbX5bc8j7ZcQ==}
     engines: {node: '>=8'}
     dev: false
 
@@ -2079,8 +2077,8 @@ packages:
       graceful-fs: 4.2.10
     dev: false
 
-  /katex/0.16.0:
-    resolution: {integrity: sha512-wPRB4iUPysfH97wTgG5/tRLYxmKVq6Q4jRAWRVOUxXB1dsiv4cvcNjqabHkrOvJHM1Bpk3WrgmllSO1vIvP24w==}
+  /katex/0.16.1:
+    resolution: {integrity: sha512-UBMAkwVv0kG5StxdAegSSCPSUb8oXO5WIIMm/c9GP+7gR3BNcmdNnmA3FIgJlsKKjRyapWFQj27h9+CNjbxVIw==}
     hasBin: true
     dependencies:
       commander: 8.3.0
