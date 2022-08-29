@@ -21,6 +21,10 @@ layout: section
 
 # 组合式API
 
+<!-- 
+因为有些同学可能没接触过vue3，所以首先我们来介绍一下组合式API
+ -->
+
 ---
 layout: big-points
 title: 为什么要有组合式API?
@@ -210,6 +214,13 @@ layout: section
 
 # 优雅的自定义hooks
 
+<!-- 
+熟悉了组合式API之后，我们在项目中经常会拆分逻辑或者编写一些公共的hooks函数，
+那么下面我就分享一些实用的技巧，可以让你的hooks更加的灵活
+以下的技巧其实都不是我发明的，都是来源于社区的各种实践，以下将要分享的技巧都是
+我认为对咱们日常的开发很有帮助的
+ -->
+
 ---
 layout: big-points
 title: ref 还是 reactive?
@@ -295,8 +306,7 @@ reactive
 </div>
 
 <!-- 
-那么接下来就开始分享我们实践中常用的一些技巧和模式
-首先，大家最常遇到的一个问题就是，在composition API中，我们应该什么时候使用ref，什么时候又使用reactive呢？
+在介绍技巧模式之前，先来解决一个大家最常遇到的一个问题，在composition API中，我们应该什么时候使用ref，什么时候又使用reactive呢？
 这个问题没有标准答案，但是根据社区的经验（开源项目代码）以及vue团队成员antfu的推荐，就是能够使用ref的时候
 尽量使用ref
 （点击）首先第一个就是说，ref可以显示的使用.value进行使用，虽然很多人可能不喜欢这个.value对不对，但是这样使用的时候
@@ -547,65 +557,7 @@ export function useTimeAgo( MaybeRef<Date | number | string> ){
 这是一个小技巧
  -->
 
----
-layout: big-points
-title: 重复使用已有ref
-titleRow: true
----
 
-<div m="b-4" w="200" text="xl">
-
-<v-click>
-
-- ### 常见多余代码
-```javascript
-const foo = ref(1)
-const bar = isRef(foo) ? foo : ref(foo)
-const bar = foo
-```
-<br />
-<br />
-</v-click>
-
-<v-click>
-
-- ### ref变量不会被构造函数重复构造
-```javascript
-const foo = ref(1)
-const bar = ref(foo)
-```
-</v-click>
-</div>
-
-
----
-layout: big-points
-title: 使用由ref组成的对象
-titleRow: true
----
-
-<div m="b-4" w="200" text="xl">
-
-```javascript
-function useMouse() {
-    // ...
-    
-    return {
-        x: ref(0)
-        y: ref(0)
-    }
-}
-
-//直接使用
-const { x } = useMouse()
-x.value // 0
-
-//其实可以自动解包（不需要.value)
-const mouse = reactive(useMouse())
-
-mouse.x // 0 
-```
-</div>
 
 ---
 layout: big-points
@@ -636,6 +588,125 @@ name.value = 'Hi' //页面标题变成 Hi World
 ```
 </v-click>
 </div>
+
+<!-- 
+就像积木一样，你可以让你的函数适应不同的场景
+（点击）以useTitle这个hook为例，它会在内部构造一个特殊的Ref，它和文档的title关联起来
+如果改变这个ref，就会相应的改变文档的title
+这里有个问题，就是每次我需要使用这个hook时都需要创建一个Ref
+其实我们可以把它设计的更加灵活（点击）
+我们可以把它绑定到一个现有的Ref，这里有个title的Ref，我们把它传递给useTitle的时候，意味着把它和文档的title建立了
+联系，同时这里对name赋值的时候，标题也会改变
+-->
+
+---
+layout: big-points
+title: useTitle实现
+titleRow: true
+---
+
+<div w="200">
+
+```javascript
+import { ref, watch } from 'vue'
+import { Mayberef } from '@vueuse/core'
+
+export function useTitle(
+  newTitle: MaybeRef<string | null | undefined>
+)
+{
+  const title = ref( newTitle || document.title )
+
+  watch(title, t=>{
+    if(t != null)
+      document.title = t
+  }, { immediate: true })
+
+  return title
+}
+```
+</div>
+
+<!-- 
+（介绍）
+这里用了一个技巧，我们可以看到传进来的newTitle不一定是ref，那么我们在内部又使用ref给它包裹了一层
+这其实也是一个技巧, 叫重复使用已有的ref（下一页）
+ -->
+
+---
+layout: big-points
+title: 重复使用已有ref
+titleRow: true
+---
+
+<div m="b-4" w="200" text="xl">
+
+### ref变量不会被构造函数重复构造
+<div m="y-8">
+
+```javascript
+const foo = ref(1) // Ref<1>
+const bar = ref(foo) // Ref<1>
+
+foo === bar // true
+```
+</div>
+
+```javascript
+function useFoo(foo: Ref<string> | string) {
+  const bar = isRef(foo) ? foo : ref(foo)
+
+  //其实可以直接
+  const bar = ref(foo)
+}
+```
+
+</div>
+
+
+<!-- 
+这其实是很多人不知道的ref的一个特点，这其实和unref很像
+如果你将一个ref传给ref构造函数，它会原样返回
+（点击）如果你不知道这个特点，你很可能会写出这样的代码
+如果在hook之间互相嵌套过深的时候，你需要做的判断会非常地狱，所以这个技巧还是
+非常实用的。
+同时ref的这种设计也值得我们借鉴
+-->
+
+---
+layout: big-points
+title: 使用由ref组成的对象
+titleRow: true
+---
+
+<div m="b-4" w="200" text="xl">
+
+```javascript
+function useMouse() {
+    // ...
+    
+    return {
+        x: ref(0)
+        y: ref(0)
+    }
+}
+
+const { x } = useMouse()
+const mouse = reactive(useMouse())
+
+mouse.x === x.value // true
+```
+</div>
+
+<!-- 
+接下来是另外一种模式，在实践中我们能感觉到，很多时候返回一个由ref组成的对象会让函数
+更加灵活。
+比如这样一种情况（点击）useMouse这个函数会返回两个Ref变量，它们已和你鼠标位置的x，y坐标建立了联系
+如果我想要使用x的时候，可以直接解构，由于x是Ref所以响应式不会丢失
+如果我想做一个整体的响应式对象，或者我想使用mouse.x的形式访问坐标,甚至想将它整体传给其他hook
+就可以使用reactive包裹hook的返回对象
+这样我们就可以根据不同的情况去灵活的使用hook
+ -->
 
 ---
 layout: big-points
@@ -677,17 +748,34 @@ console.log(store.state.foo) // 'yeah'
 </v-click>
 </div>
 
+<!-- 
+最后一种模式是状态共享，大家可能都在网上看过很多文章，说vue3之后不需要vuex这种状态共享库了
+其实本质原因还是composition API可以独立于组件使用
+我们在实践中应该已经用过pinia这个状态库了（点击）
+它本来是一个社区项目，后来被vue官方收编成为了vuex的正式替代。那么大家可以看到它的实现其实就是
+一个hook
+（点击*2）使用起来也非常简单，由于其内部变量都是响应式的，所以我们直接像使用普通对象一样去使用就好了。
+同时在store中，我们可以使用computed watch等API完成更复杂的副作用，让store更加灵活。
+-->
+
 ---
 layout: section
 ---
 
 # 组件拆分细则
 
+<!-- 
+那么介绍了这么多技巧，其实还有一个我们开发中的痛点没有涉及到，那就是究竟该怎么拆分组件的逻辑，何时应该拆分呢
+这个问题虽然没有标准答案，但其实每个人刚开始开发vue3时都会被困扰到
+ -->
+
 ---
 layout: big-points
 title: 取舍
 titleRow: true
 ---
+
+<v-click>
 
 <div m="b-4" text="xl">
 一些从选项式 API 迁移来的用户发现，他们的组合式 API 代码缺乏组织性，并得出了组合式 API 在代码组织方面“更糟糕”的结论。我们建议持有这类观点的用户换个角度思考这个问题。
@@ -701,12 +789,28 @@ titleRow: true
 选项式 API 确实允许你在编写组件代码时“少思考”，这是许多用户喜欢它的原因。然而，在减少费神思考的同时，它也将你锁定在规定的代码组织模式中，没有摆脱的余地，这会导致在更大规模的项目中难以进行重构或提高代码质量。在这方面，组合式 API 提供了更好的长期可维护性。 
 </div>
 
+</v-click>
+
+<!-- 
+在实际的vue3项目中，大家应该都见过一些比较头疼的代码，最常见的就是在一个setup中堆了所有的功能，而且这个
+组件还有上千行的长度。由于这种情况的普遍，也导致了社区里出现一种声音，那就是为什么我觉得vue3代码的可读性
+反而不如vue2了呢？这个问题也被vue官方注意到，所以官方文档里专门写了一段回答（点击）
+（读回答）
+看起来好像懂了，但是好像又没懂。因为这个回答只说明了组合式API更加灵活，所以可以有更好的可维护性，但没有具体
+地告诉你具体该怎么做。
+由于组合式API可以独立于vue组件使用，它的灵活度和js的灵活度差不了太多。而且拆分逻辑这种事和你的熟练度也有一定关系，
+所以其实这种具体的做法是没有一个标准答案的。
+但是遵循一些原则，可以让你再拆分逻辑时更得心应手。（下一页）
+ -->
+
 
 ---
 layout: big-points
 title: 逻辑关注点分离
 titleRow: true
 ---
+
+<v-click>
 
 <div m="b-4" text="xl">
 在实践中，我们在拆分组件hook时，不需要考虑拆分出来的hook是否能复用，而只应当关注它是否起到了"逻辑关注点分离"的作用。
@@ -719,6 +823,18 @@ titleRow: true
 <div m="b-4" text="xl">
 这里需要注意，拆分出来的文件通常以'useXXX'作为名称，而不再是vue2.x中的mixin，这样是为了将它们区分开来。
 </div>
+
+</v-click>
+
+<!-- 
+一些朋友在面临拆分逻辑的时候，他会认为，一些逻辑是没有公用性的，即使拆分出来也不能复用。那何必呢，
+还是都写在setup里吧。这其实是有悖于组合式API设计的初衷的。
+虽然我们上面说过，组合式API大大增强了代码的可复用性，但是是否需要复用却并不能成为你是否应该拆分逻辑的原因
+因为组合式API设计的初衷是逻辑关注点分离（点击）（读）。也就是说，只要你想增强代码的可读性，可维护性，你就可以根据逻辑来拆分你的组件
+至于什么时候拆分，以及是否需要拆分到不同的文件，这个就因人而异了。但是像刚才说的情况，上千行的组件，那肯定是
+不对的。
+下面我们分享一个实际场景中常见的例子。
+ -->
 
 
 ---
@@ -739,6 +855,15 @@ titleRow: true
   <Ep4 />
 
   </div>
+
+<!-- 
+（读）
+下面是我们项目源码的目录，src下包含所有源码，而顶层的这个hooks文件夹用于存放通用的hooks函数
+比如网络请求封装成useFetch，统一放在这个目录下
+然后在不同的页面里，我们也可以建立页面级的hooks文件夹，假设这个订单页面，里面包含了很多内容，
+组件比较复杂，这时候我们想把订单列表相关的逻辑抽出去，就可以创建一个useList文件，把这部分逻辑放进来
+然后在组件里引用即可
+ -->
 
 
 </div>
@@ -776,6 +901,16 @@ export function useList(list: Ref<List>){
 ```
 </div>
 
+<!-- 
+那么具体的话，这里给出了一个详细的示例，在useList中，我们首先接受一个参数list，用来存放所有订单数据
+我们定义了和列表有关的所有状态，比如判断是否加载出错isError,判断是否已经拉完了所有订单isFinished,
+和加载动画的isLoading，然后我们使用onMounted生命周期函数，在里面进行订单的请求，根据请求结果设置
+不同的状态，最后把状态都返回出去
+注意，不光是ref computed watch这种API可以独立于组件使用，我们的所有生命周期钩子函数也可以独立于组件调用，
+只不过只有函数在组件上下文被加载时，内部的生命周期函数才会运行。这也是hooks函数很强大的一点。
+（下一页）
+ -->
+
 
 ---
 layout: big-points
@@ -807,12 +942,24 @@ export default {
 ```
 </div>
 
+<!-- 
+接下来，我们就可以直接在组件中解构出useList返回的各种参数，而我们再调用useList时，
+它的生命周期也合并进了组件内，也就是在组件挂载的时候，它会去请求订单列表，并且赋值给list
+这样就是一个完整的逻辑抽离的例子，以后如果组件出了bug，你看是和列表状态有关的，就可以直接找到
+useList这个文件去进行修改。
+想象一下如果这是options API，且没有进行逻辑抽离，而且功能又复杂，那么以后你修改的时候很可能
+背上千行的代码埋没。
+ -->
+
 ---
 layout: section
 ---
 
-# 其他技巧
+# JSX in vue3
 
+<!-- 
+最后，我们来介绍一下vue3中的jsx的使用。大家可能都知道了，vue3对jsx也提供了更好的支持。（下一页）
+ -->
 
 ---
 layout: big-points
