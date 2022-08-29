@@ -38,20 +38,20 @@ titleRow: true
 ```javascript
 export default {
   data(){
-		return{
-			dark: false
-		}
-	},
-	computed:{
-		light(){
-			return !this.dark
-		}
-	},
-	methods:{
-		toggleDark(){
-			this.dark = !this.dark
-		}
-	}
+    return{
+      dark: false
+    }
+  },
+  computed:{
+    light(){
+      return !this.dark
+    }
+  },
+  methods:{
+    toggleDark(){
+      this.dark = !this.dark
+    }
+  }
 }
 ```
 </div>
