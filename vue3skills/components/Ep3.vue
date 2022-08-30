@@ -57,7 +57,7 @@
   margin-bottom: 16px;
 }
 .ep3 div li{
-  width: 200px;
+  width: 220px;
   margin-right: 72px;
 }
 </style>

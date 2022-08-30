@@ -10,7 +10,6 @@ fonts:
 # Vue3 实战技巧
 ## 分享人：林博文
 
-
 ---
 
 <Category />
@@ -87,7 +86,7 @@ layout: quote
 
 <div m="r-4" v-click>
 
-```html
+```html {monaco}
 <template>
   <div>
     <button @click="toggleDark">切换</button>
@@ -116,7 +115,7 @@ export default {
 
 <div v-click>
 
-```html
+```html {monaco}
 <script setup>
 import { ref,computed } from 'vue'
 const dark = ref(false)
@@ -151,7 +150,7 @@ layout: quote
 <Ep2 v-click/>
 <div v-click m="l-4">
 
-```javascript
+```javascript {monaco}
 import { ref, computed } from '@vue/reactivity'
 export function useDark(){
 		const dark = ref(false)
@@ -163,7 +162,7 @@ export function useDark(){
 }
 ```
 
-```html
+```html {monaco}
 <template>
   <button @click="toggleDark">切换</button>
 </template>
@@ -277,7 +276,7 @@ bar = 1 // ts-error
 <div v-click="2" flex="1">
 reactive
 
-```html
+```html {monaco}
 <script setup lang="ts">
   import { reactive } from 'vue'
 
@@ -352,6 +351,7 @@ watch(counter, count=>{
 
 <li v-click>
 Ref在模板中自动解包
+
 ```html
   <template>
     <button @click="counter += 1">
@@ -364,6 +364,7 @@ Ref在模板中自动解包
 
 <li v-click>
 使用reactive解包嵌套的Ref
+
 ```javascript
 import { ref, reactive } from 'vue'
 const foo = ref('bar')
@@ -397,7 +398,7 @@ layout: quote
 <v-click>
 
 - 实现:
-```javascript
+```typescript
 import { isRef } from 'vue'
 function unref<T>( r: Ref<T> | T): T {
   return isRef(r) ? r.value : r
@@ -410,7 +411,7 @@ function unref<T>( r: Ref<T> | T): T {
 <v-click>
 
 - 使用
-```javascript
+```javascript {monaco}
 import { ref, unref } from 'vue'
 const foo = ref('foo')
 unref(foo) //foo
@@ -442,7 +443,7 @@ layout: quote
 <div w="72" h="10" flex="~" align="items-center" justify="content-center" text="[1rem]">纯函数</div>
 <div m="r-4" w="100">
 
-```javascript
+```typescript
   function add(a: number, b:number){
     return a + b
   } 
@@ -450,7 +451,7 @@ layout: quote
 </div>
 <div>
 
-```javascript
+```javascript {monaco}
 let a = 1
 let b = 2
 let c = add(a, b) //3
@@ -462,7 +463,7 @@ let c = add(a, b) //3
 <div w="72" h="20" flex="~" align="items-center" justify="content-center" text="[1rem]">接受Ref作为参数,返回一个响应式结果</div>
 <div m="r-4" w="100">
 
-```javascript
+```typescript
   function add(a: Ref<number>, b: Ref<number>){
     return computed(()=> a.value + b.value)
   } 
@@ -470,7 +471,7 @@ let c = add(a, b) //3
 </div>
 <div>
 
-```javascript
+```javascript {monaco}
 const a = ref(1)
 const b = ref(2)
 const c = add(a, b)
@@ -483,7 +484,7 @@ c.value //3
 <div w="72" h="30" flex="~" align="items-center" justify="content-center" text="[1rem]" >同时接受传入值和Ref</div>
 <div m="r-4" w="100">
 
-```javascript
+```typescript
   function add(
     a: Ref<number> | number
     b: Ref<number> | number
@@ -494,7 +495,7 @@ c.value //3
 </div>
 <div>
 
-```javascript
+```javascript {monaco}
 const a = ref(1)
 
 const c = add(a, 5)
@@ -534,7 +535,7 @@ type = MaybeRef<T> = Ref<T> | T
 <v-click>
 
 - 使用前
-```javascript
+```typescript
 export function useTimeAgo(
 	time: Date | number | string | Ref<Date | number | string>
 ){
@@ -545,7 +546,7 @@ export function useTimeAgo(
 <v-click>
 
 - 使用后
-```javascript
+```typescript
 type MaybeRef<T> = Ref<T> | T
 export function useTimeAgo( MaybeRef<Date | number | string> ){
 	return computed( ()=> someFormating( unref(time) ) )
@@ -574,7 +575,7 @@ layout: quote
 <div m="b-4" w="200" text="xl">
 <v-click>
 
-- ### 通常考虑
+- #### 通常考虑
 ```javascript
 const title = useTitle()
 title.value = 'Hello World'
@@ -585,7 +586,7 @@ title.value = 'Hello World'
 </v-click>
 <v-click>
 
-- ### 更加灵活
+- #### 更加灵活
 ```javascript
 const name = ref('Hello')
 const title = computed( ()=> `${name.value} World` )
@@ -658,7 +659,7 @@ foo === bar // true
 ```
 </div>
 
-```javascript
+```typescript
 function useFoo(foo: Ref<string> | string) {
   const bar = isRef(foo) ? foo : ref(foo)
 
@@ -724,7 +725,7 @@ layout: quote
 <v-click>
 
 - store.ts
-```javascript
+```javascript {monaco}
 import { reactive } from 'vue'
 export const store = reactive({
 	state: {
@@ -737,7 +738,7 @@ export const store = reactive({
 <v-click>
 
 - A.vue
-```javascript
+```javascript {monaco}
 import { store } from 'store'
 store.state.foo = 'yeah'
 ```
@@ -746,7 +747,7 @@ store.state.foo = 'yeah'
 <v-click>
 
 - B.vue
-```javascript
+```javascript {monaco}
 import { store } from 'store'
 console.log(store.state.foo) // 'yeah'
 ```
@@ -759,7 +760,7 @@ console.log(store.state.foo) // 'yeah'
 其实本质原因还是composition API可以独立于组件使用
 我们在实践中应该已经用过pinia这个状态库了（点击）
 它本来是一个社区项目，后来被vue官方收编成为了vuex的正式替代。那么大家可以看到它的实现其实就是
-一个hook
+一个hook(敲代码,userStore)
 （点击*2）使用起来也非常简单，由于其内部变量都是响应式的，所以我们直接像使用普通对象一样去使用就好了。
 同时在store中，我们可以使用computed watch等API完成更复杂的副作用，让store更加灵活。
 -->
@@ -774,7 +775,7 @@ layout: quote
 <v-click>
 
 useEventListener
-```javascript
+```typescript
 import { onUnmounted } from 'vue'
 
 export function useEventListener(target: EventTarget, name:string, fn:any){
@@ -808,7 +809,7 @@ layout: quote
 
 <div m="r-4">
 
-```javascript
+```typescript
 function useDouble(counter: Ref<number>){
   const doubled = computed(()=> counter.value * 2)
 
@@ -825,7 +826,7 @@ function useDouble(counter: Ref<number>){
 
 <div>
 
-```javascript
+```typescript
 function useDouble(counter: Ref<number>){
   const disposables = []
 
@@ -875,7 +876,7 @@ layout: quote
 <div w="200">
 <div v-click>
 
-```javascript
+```typescript
 function effectScope(detached?: boolean): EffectScope
 
 interface EffectScope {
@@ -907,8 +908,119 @@ scope.stop()
 这个API叫effectScope,它的签名大概是这样的（点击）
 他的使用方式类似于一个构造函数，它提供一个run方法，用来运行一个effect，
 相应的，它提供了一个stop方法，当调用stop时，其effect内部所有副作用都会被统一清除
-这是一个使用例子（点击）
-由于现在建立的新项目都是3.2版本了，大家不要忘记使用这个API
+这是一个它使用的例子（点击）（介绍）
+接下来我们讨论另一个新增的API
+ -->
+
+---
+layout: quote
+---
+
+### onScopeDispose
+
+```javascript
+import { onScopeDispose } from 'vue'
+
+const scope = effectScope()
+
+scope.run(() => {
+  onScopeDispose(() => {
+    console.log('cleaned!')
+  })
+})
+
+scope.stop() // logs 'cleaned!'
+```
+
+<!-- 
+我们可以想到，不是所有的hook都会被加载到vue组件中使用，那我们就不能在onUnmounted钩子里释放我们的
+effectScope。好在vue3.2开始内置了一个hook onScopeDispose（点击）它的作用和onUnmounted类似,但是它只作用于当前的作用域
+而不是整个组件实例。当我们只想清除函数内部副作用时用它很有帮助。其实，setup()也是创建了一个组件内部的作用域，
+所以当函数在组件内被调用时，它的作用其实和onUnmounted是一样的。然后，我们看看再实战中，怎么去合理运用这些新增的API
+ -->
+
+
+---
+layout: quote
+---
+
+### Use Case Examples
+
+<div flex="~" w="200">
+<div m="r-4" v-click w="100">
+
+```javascript {monaco}
+function useMouse() {
+  const x = ref(0)
+  const y = ref(0)
+
+  function handler(e) {
+    x.value = e.x
+    y.value = e.y
+  }
+
+  window.addEventListener('mousemove', handler)
+
+  onUnmounted(() => {
+    window.removeEventListener('mousemove', handler)
+  })
+
+  return { x, y }
+}
+```
+</div>
+<div v-click w="100">
+
+```javascript
+function createSharedComposable(composable) {
+  let subscribers = 0
+  let state, scope
+
+  const dispose = () => {
+    if (scope && --subscribers <= 0) {
+      scope.stop()
+      state = scope = null
+    }
+  }
+
+  return (...args) => {
+    subscribers++
+    if (!state) {
+      scope = effectScope(true)
+      state = scope.run(() => composable(...args))
+    }
+    onScopeDispose(dispose)
+    return state
+  }
+}
+```
+</div>
+
+</div>
+<!-- 
+我们还是以之前介绍过的这个useMouse hook为例。不难看出，这个hook会产生全局的副作用，因为它使用了事件监听，
+这种情况下，如果说这个hook在很多个组件中都被调用了，那每个组件都会创建一个listener，得到一个只属于自己的x和y
+坐标。编写hook时，我们毫无疑问应该避免这种情况，我们会想到，应该在多个组件中去共享这个listener还有坐标的ref，
+但是在3.2之前我们是做不到的，因为onUnmounted都只和单一的组件实例耦合。
+那么借助刚才介绍的scope相关API，我们其实就可以实现这一点。首先，把onUnmounted钩子换成onScopeDispose
+(敲代码)
+<pre>
+  onScopeDispose(()=>{
+    window.removeEventListener('mousemove',handler)
+  })
+</pre>
+但是只这样做还不够，我们需要再创建一个自己的工具函数来管理scope的订阅(点击)
+这个函数接受一个hook，在内部创建了一个闭包用来保存hook的state和scope，以及它的订阅者数量
+这里的订阅者其实就是指组件,那么去使用的话就是这样的
+（敲代码）
+<pre>
+const useSharedMouse = createSharedComposable(useMouse)
+</pre>
+那么，我们的这个useSharedMouse本质上就是这个返回的回调函数。当它被调用时，第一次会创建这个hook的实例，
+用我们之前提过的run方法，同时我们创建函数本身的scope。在之后的每次调用，都共享这个scope和state，而
+这个onScopeDispose只会作用于每个调用的subscribers。
+这样就完美解决了这个问题。
+大家以后在写公共hook时也可以遵循这个模式。（下一页）
  -->
 
 ---
@@ -1029,7 +1141,7 @@ layout: quote
 
 <div m="b-4" w="200" text="xl">
 
-```javascript
+```javascript {monaco}
 import { fetchOrderList } from '@/api'
 export function useList(list: Ref<List>){
   const isError = ref(false)
@@ -1073,7 +1185,7 @@ layout: quote
 
 <div m="b-4" w="200" text="xl">
 
-```html
+```html {monaco}
 <template>
   <!-- ... -->>
   <div v-for="item in list" :key="item.id">
@@ -1139,11 +1251,11 @@ layout: quote
 
 #### 由编译器和框架自己实现
 
-```javascript
+```javascript {monaco}
 <h1>Hello, world!</h1>
 ```
 
-```javascript
+```javascript {monaco}
 import { createVNode as _createVNode } from 'vue'
 
 _createVNode('h1', null, "hello, world")
@@ -1169,7 +1281,7 @@ layout: quote
 
 #### 插件：@vue/babel-plugin-jsx
 
-```javascript
+```javascript {monaco}
 declare global {
   namespace JSX {
     interface Element {}
@@ -1204,7 +1316,7 @@ layout: quote
 
 <div m="r-4" v-click>
 
-```javascript
+```javascript {monaco}
 
 const List = defineComponent({
   setup(){
@@ -1231,7 +1343,7 @@ export default defineComponent({
 </div>
 <div v-click>
 
-```javascript
+```javascript {monaco}
 const renderContent = defineComponent({
   setup(props){
     const Content = [
@@ -1282,7 +1394,7 @@ layout: quote
 
 <div v-click>
 
-```jsx
+```javascript {monaco}
 // v-show
 <input v-show={this.visible.value} />
 // v-if
@@ -1345,7 +1457,7 @@ layout: quote
 <li v-click>
 
 #### vue3中不建议写纯函数组件
-```javascript
+```javascript {monaco}
 function Button(props){
   return <button {...props}>按钮</button>
 }
@@ -1386,7 +1498,7 @@ layout: quote
 <div w="200" flex="~">
 <div v-click m="r-4">
 
-```javascript
+```javascript {monaco}
 const Child = defineComponent({
   setup(){
     const orderId = inject('orderId')
@@ -1403,7 +1515,7 @@ const Parent = defineComponent({
 </div>
 <div v-click>
 
-```javascript
+```javascript {monaco}
 interface UserInfo {
   id: number
   name: string

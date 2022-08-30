@@ -4,17 +4,11 @@ specifiers:
   '@iconify-json/logos': ^1.1.14
   '@iconify-json/uim': ^1.1.2
   '@slidev/cli': ^0.35.5
-  '@slidev/theme-default': '*'
   '@slidev/theme-seriph': '*'
-  slidev-theme-vuetiful: ^0.3.1
-  vue: ^3.2.37
 
 dependencies:
   '@slidev/cli': 0.35.5_postcss@8.4.16
-  '@slidev/theme-default': 0.21.2
   '@slidev/theme-seriph': 0.21.3
-  slidev-theme-vuetiful: 0.3.1_mf6qq4loghhhbxa6kbuadco3gy
-  vue: 3.2.37
 
 devDependencies:
   '@iconify-json/logos': 1.1.14
@@ -325,16 +319,6 @@ packages:
     dependencies:
       '@slidev/types': 0.35.5
       js-yaml: 4.1.0
-    dev: false
-
-  /@slidev/theme-default/0.21.2:
-    resolution: {integrity: sha512-neUucFs2YrRZZd73QwvLTyRG/o1nerDFUR5t8YAmXVLTMzWfY71flQ6aAhjYf+WjsozYsOHcxi/pZtIzZ4VhTQ==}
-    engines: {node: '>=14.0.0', slidev: '>=0.19.2'}
-    dependencies:
-      '@slidev/types': 0.22.7
-      codemirror-theme-vars: 0.1.1
-      prism-theme-vars: 0.2.4
-      theme-vitesse: 0.1.14
     dev: false
 
   /@slidev/theme-seriph/0.21.3:
@@ -2120,10 +2104,6 @@ packages:
       p-locate: 5.0.0
     dev: false
 
-  /lodash-es/4.17.21:
-    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
-    dev: false
-
   /lodash/4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
     dev: false
@@ -2536,23 +2516,6 @@ packages:
 
   /sisteransi/1.0.5:
     resolution: {integrity: sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg==}
-    dev: false
-
-  /slidev-theme-vuetiful/0.3.1_mf6qq4loghhhbxa6kbuadco3gy:
-    resolution: {integrity: sha512-XkWe3M2Wa6amlbfGBkERuamQmR0XqXpa+elLI/jwS0VVELr9fJwWNmD3a+OAnG9GqrYXVY6ggZChe2u51O1QFw==}
-    engines: {node: '>=16.0.0', slidev: '>=0.30.3'}
-    peerDependencies:
-      '@slidev/cli': '>=0.32.4'
-      vue: ^3.2.36
-    peerDependenciesMeta:
-      '@slidev/cli':
-        optional: true
-      vue:
-        optional: true
-    dependencies:
-      '@slidev/cli': 0.35.5_postcss@8.4.16
-      lodash-es: 4.17.21
-      vue: 3.2.37
     dev: false
 
   /source-map-js/1.0.2:
