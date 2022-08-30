@@ -18,7 +18,7 @@ fonts:
 layout: section
 ---
 
-# 组合式API
+# 组合式API简介
 
 <!-- 
 因为有些同学可能没接触过vue3，所以首先我们来介绍一下组合式API
@@ -36,7 +36,7 @@ h3{
 }
 </style>
 
-### 为什么要有组合式API?
+### 什么是组合式API
 
 <div m="b-4" w="200" text="xl" flex="~">
 
@@ -80,7 +80,7 @@ export default {
 layout: quote
 ---
 
-### 为什么要有组合式API?
+### 什么是组合式API
 
 <div w="200" flex="~" text="xl">
 
@@ -219,7 +219,11 @@ layout: quote
 layout: section
 ---
 
-# 优雅的自定义hooks
+# 使用组合式API构建hooks
+
+#### 常见问题
+#### 实用工具
+#### 编写范式
 
 <!-- 
 熟悉了组合式API之后，我们在项目中经常会拆分逻辑或者编写一些公共的hooks函数，
@@ -1041,18 +1045,11 @@ layout: quote
 ### 取舍
 
 <v-click>
+<div m="b-4">来自vue官方的回答：</div>
 
-<div m="b-4" text="xl">
-一些从选项式 API 迁移来的用户发现，他们的组合式 API 代码缺乏组织性，并得出了组合式 API 在代码组织方面“更糟糕”的结论。我们建议持有这类观点的用户换个角度思考这个问题。
-</div>
-
-<div m="b-4" text="xl">
-组合式 API 不像选项式 API 那样会手把手教你该把代码放在哪里。但反过来，它却让你可以像编写普通的 JavaScript 那样来编写组件代码。这意味着你能够，并且应该在写组合式 API 的代码时也运用上所有普通 JavaScript 代码组织的最佳实践。如果你可以编写组织良好的 JavaScript，你也应该有能力编写组织良好的组合式 API 代码。
-</div>
-
-<div m="b-4" text="xl">
-选项式 API 确实允许你在编写组件代码时“少思考”，这是许多用户喜欢它的原因。然而，在减少费神思考的同时，它也将你锁定在规定的代码组织模式中，没有摆脱的余地，这会导致在更大规模的项目中难以进行重构或提高代码质量。在这方面，组合式 API 提供了更好的长期可维护性。 
-</div>
+> 一些从选项式 API 迁移来的用户发现，他们的组合式 API 代码缺乏组织性，并得出了组合式 API 在代码组织方面“更糟糕”的结论。我们建议持有这类观点的用户换个角度思考这个问题。<br />
+> 组合式 API 不像选项式 API 那样会手把手教你该把代码放在哪里。但反过来，它却让你可以像编写普通的 JavaScript 那样来编写组件代码。这意味着你能够，并且应该在写组合式 API 的代码时也运用上所有普通 JavaScript 代码组织的最佳实践。如果你可以编写组织良好的 JavaScript，你也应该有能力编写组织良好的组合式 API 代码。<br />
+> 选项式 API 确实允许你在编写组件代码时“少思考”，这是许多用户喜欢它的原因。然而，在减少费神思考的同时，它也将你锁定在规定的代码组织模式中，没有摆脱的余地，这会导致在更大规模的项目中难以进行重构或提高代码质量。在这方面，组合式 API 提供了更好的长期可维护性。 
 
 </v-click>
 
@@ -1077,16 +1074,44 @@ layout: quote
 
 <v-click>
 
-<div m="b-4" text="xl">
-在实践中，我们在拆分组件hook时，不需要考虑拆分出来的hook是否能复用，而只应当关注它是否起到了"逻辑关注点分离"的作用。
+概念
+> 关注点分离（Seperation of concerns, SOC)是对只与“特定概念、目标”(关注点)相关联的软件组成部分进行“标识、封装和操纵”的能力，即标识、封装和操纵关注点的能力。
+
+> 这是处理复杂性的一个原则。由于关注点混杂在一起会导致复杂性大大增加，所以能够把不同的关注点分离开来，分别处理就是处理复杂性的一个原则，一种方法。
+
+> 关注点分离是面向方面的程序设计的核心概念。分离关注点使得解决特定领域问题的代码从业务逻辑中独立出来。
+
+</v-click>
+<v-click>
+
+实例
+
+> MVC架构，前端三大件
+
+</v-click>
+
+---
+layout: quote
+---
+
+
+### 总结
+
+<v-click>
+
+<div m="b-4" text="xl" v-click>
+
+- 拆分组件hook时，不需要考虑拆分出来的hook是否能复用，而只应当关注它是否起到了"逻辑关注点分离"的作用。
 </div>
 
-<div m="b-4" text="xl">
-这个原则和组件的拆分原则很像，最终目的都是使代码更加健壮，可维护性更强。
+<div m="b-4" text="xl" v-click>
+
+- 原则与组件的拆分原则相同，最终目的都是使代码更加健壮，可维护性更强。
 </div>
 
-<div m="b-4" text="xl">
-这里需要注意，拆分出来的文件通常以'useXXX'作为名称，而不再是vue2.x中的mixin，这样是为了将它们区分开来。
+<div m="b-4" text="xl" v-click>
+
+- 这里需要注意，拆分出来的文件通常以'useXXX'作为名称，而不再是vue2.x中的mixin，这样是为了将它们区分开来。
 </div>
 
 </v-click>
@@ -1096,8 +1121,8 @@ layout: quote
 还是都写在setup里吧。这其实是有悖于组合式API设计的初衷的。
 虽然我们上面说过，组合式API大大增强了代码的可复用性，但是是否需要复用却并不能成为你是否应该拆分逻辑的原因
 因为组合式API设计的初衷是逻辑关注点分离（点击）（读）。也就是说，只要你想增强代码的可读性，可维护性，你就可以根据逻辑来拆分你的组件
-至于什么时候拆分，以及是否需要拆分到不同的文件，这个就因人而异了。但是像刚才说的情况，上千行的组件，那肯定是
-不对的。
+至于什么时候拆分，以及是否需要拆分到不同的文件，这个其实和组件拆分的逻辑是一样的（点击）。
+最后（点击）需要注意
 下面我们分享一个实际场景中常见的例子。
  -->
 
@@ -1141,7 +1166,7 @@ layout: quote
 
 <div m="b-4" w="200" text="xl">
 
-```javascript {monaco}
+```typescript
 import { fetchOrderList } from '@/api'
 export function useList(list: Ref<List>){
   const isError = ref(false)
@@ -1237,7 +1262,7 @@ layout: quote
 
 <div w="200" flex="~">
 
-<div>
+<div w="120">
 <ul>
 <li v-click>
 
@@ -1251,10 +1276,18 @@ layout: quote
 
 #### 由编译器和框架自己实现
 
-```javascript {monaco}
+- jsx
+```javascript
 <h1>Hello, world!</h1>
 ```
 
+- react
+```javascript
+import * as React from 'react'
+React.createElement("h1", null, "hello, world")
+```
+
+- vue
 ```javascript {monaco}
 import { createVNode as _createVNode } from 'vue'
 
@@ -1281,7 +1314,7 @@ layout: quote
 
 #### 插件：@vue/babel-plugin-jsx
 
-```javascript {monaco}
+```typescript
 declare global {
   namespace JSX {
     interface Element {}
@@ -1394,7 +1427,7 @@ layout: quote
 
 <div v-click>
 
-```javascript {monaco}
+```html
 // v-show
 <input v-show={this.visible.value} />
 // v-if
@@ -1498,7 +1531,7 @@ layout: quote
 <div w="200" flex="~">
 <div v-click m="r-4">
 
-```javascript {monaco}
+```javascript
 const Child = defineComponent({
   setup(){
     const orderId = inject('orderId')
@@ -1515,7 +1548,7 @@ const Parent = defineComponent({
 </div>
 <div v-click>
 
-```javascript {monaco}
+```typescript
 interface UserInfo {
   id: number
   name: string
